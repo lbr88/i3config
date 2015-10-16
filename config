@@ -31,12 +31,16 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
 
+
 # kill focused window
 bindsym $mod+Shift+q kill
 bindsym $mod+x kill
+bindsym $altmod+F4 kill
+#kill with middle mouse click
+bindsym --release button2 kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec i3-dmenu-desktop
+bindsym $mod+space exec i3-dmenu-desktop
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -81,10 +85,10 @@ bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+d floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $mod+d focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -103,18 +107,22 @@ bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
+#switch to new empty workspace
+bindsym $mod+n exec --no-startup-id .i3/new-workspace.sh
+#move windows to new workspace
+bindsym $mod+Shift+n exec --no-startup-id .i3/move-window-to-new-workspace.sh
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace 1
-bindsym $mod+Shift+2 move container to workspace 2
-bindsym $mod+Shift+3 move container to workspace 3
-bindsym $mod+Shift+4 move container to workspace 4
-bindsym $mod+Shift+5 move container to workspace 5
-bindsym $mod+Shift+6 move container to workspace 6
-bindsym $mod+Shift+7 move container to workspace 7
-bindsym $mod+Shift+8 move container to workspace 8
-bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+1 move container to workspace 1; workspace 1
+bindsym $mod+Shift+2 move container to workspace 2; workspace 2
+bindsym $mod+Shift+3 move container to workspace 3; workspace 3
+bindsym $mod+Shift+4 move container to workspace 4; workspace 4
+bindsym $mod+Shift+5 move container to workspace 5; workspace 5
+bindsym $mod+Shift+6 move container to workspace 6; workspace 6
+bindsym $mod+Shift+7 move container to workspace 7; workspace 7
+bindsym $mod+Shift+8 move container to workspace 8; workspace 8
+bindsym $mod+Shift+9 move container to workspace 9; workspace 9
+bindsym $mod+Shift+0 move container to workspace 10; workspace 10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -155,13 +163,32 @@ bar {
         status_command i3status
 }
 
-#move workspace
-bindsym $mod+$altmod+Shift+Right move workspace to output right
-bindsym $mod+$altmod+Shift+Left move workspace to output left
 
-#move container
-bindsym $mod+$altmod+Right move container to output right
-bindsym $mod+$altmod+Left move container to output left
+
+#move container to another output
+bindsym $altmod+Shift+Right move to output right; focus output right
+bindsym $altmod+Shift+Left move to output left; focus output left
+
+# move container to another workspace on current output
+bindsym $altmod+Shift+Up move workspace prev_on_output; workspace prev_on_output
+bindsym $altmod+Shift+Down move workspace next_on_output; workspace next_on_output
+
+#move workspace to another output
+bindsym $altmod+Control+Shift+Right move workspace to output right 
+bindsym $altmod+Control+Shift+Left move workspace to output left
+
+# change focus to another output
+bindsym $altmod+Left focus output left
+bindsym $altmod+Right focus output right
+
+# change workspace on the current output
+bindsym $altmod+Up workspace prev_on_output
+bindsym $altmod+Down workspace next_on_output
+bindsym $altmod+Tab workspace prev_on_output
+bindsym $altmod+Shift+Tab workspace next_on_output
+
+
+
 
 #make sticky
 bindsym $mod+z sticky toggle
@@ -170,12 +197,34 @@ bindsym $mod+z sticky toggle
 workspace_auto_back_and_forth yes
 
 #disable screensaver when container is fullscreen
-exec_always /home/lrasmussen/.i3/disable-screensaver.py
+#exec --no-startup-id .i3/disable-screensaver.py
+
+# autostart
+
+
+exec --no-startup-id .i3/screen.sh
+exec --no-startup-id xsetroot -gray
+exec --no-startup-id xsetroot -solid "#002244"
+exec redshift-gtk
+
+# lock the system when using the sleep button
+bindsym XF86Sleep exec i3lock -d
+
+# execute shortcuts
+bindsym $mod+BackSpace exec google-chrome
+# suspend the system
+#bindsym $mod+XF86Sleep exec sudo pm-hibernate
+
+# STOP THE MOUSE FROM STEALING FOCUS
+focus_follows_mouse no
 
 #Media keys
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -5% #decrease sound volume
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo +1% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -1% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute alsa_output.pci-0000_00_1b.0.analog-stereo toggle # mute sound
 
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
