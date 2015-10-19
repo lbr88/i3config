@@ -184,8 +184,8 @@ bindsym $altmod+Right focus output right
 # change workspace on the current output
 bindsym $altmod+Up workspace prev_on_output
 bindsym $altmod+Down workspace next_on_output
-bindsym $altmod+Tab workspace prev_on_output
-bindsym $altmod+Shift+Tab workspace next_on_output
+bindsym $altmod+Tab workspace next_on_output
+bindsym $altmod+Shift+Tab workspace prev_on_output
 
 
 
