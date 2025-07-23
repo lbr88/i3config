@@ -106,19 +106,19 @@ mode "$mode_display" {
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-set $mode_monitors Monitor Mode: (l)eft, (r)ight, (n)o-laptop-left, (m)o-laptop-right, (u)ndock, (1)1440p-left, (2)1440p-right, (3)1440p+no-laptop-left, (4)1440p+no-laptop-right
+set $mode_monitors Monitor Mode: (l)eft-1440p, (r)ight-1440p, (n)o-laptop-left-1440p, (m)o-laptop-right-1440p, (u)ndock, (1)left-fullres, (2)right-fullres, (3)no-laptop-left-fullres, (4)no-laptop-right-fullres
 bindsym $mod+F6 mode "$mode_monitors"
 
 mode "$mode_monitors" {
-    bindsym l exec --no-startup-id ~/bin/mon-conf.sh --left; mode "default"
-    bindsym r exec --no-startup-id ~/bin/mon-conf.sh --right; mode "default"
-    bindsym m exec --no-startup-id ~/bin/mon-conf.sh --right --no-laptop; mode "default"
-    bindsym n exec --no-startup-id ~/bin/mon-conf.sh --left --no-laptop; mode "default"
+    bindsym l exec --no-startup-id ~/bin/mon-conf.sh --left --limit-resolution; mode "default"
+    bindsym r exec --no-startup-id ~/bin/mon-conf.sh --right --limit-resolution; mode "default"
+    bindsym m exec --no-startup-id ~/bin/mon-conf.sh --right --no-laptop --limit-resolution; mode "default"
+    bindsym n exec --no-startup-id ~/bin/mon-conf.sh --left --no-laptop --limit-resolution; mode "default"
     bindsym u exec --no-startup-id ~/bin/mon-conf.sh --undock; mode "default"
-    bindsym 1 exec --no-startup-id ~/bin/mon-conf.sh --left --limit-resolution; mode "default"
-    bindsym 2 exec --no-startup-id ~/bin/mon-conf.sh --right --limit-resolution; mode "default"
-    bindsym 3 exec --no-startup-id ~/bin/mon-conf.sh --left --no-laptop --limit-resolution; mode "default"
-    bindsym 4 exec --no-startup-id ~/bin/mon-conf.sh --right --no-laptop --limit-resolution; mode "default"
+    bindsym 1 exec --no-startup-id ~/bin/mon-conf.sh --left; mode "default"
+    bindsym 2 exec --no-startup-id ~/bin/mon-conf.sh --right; mode "default"
+    bindsym 3 exec --no-startup-id ~/bin/mon-conf.sh --left --no-laptop; mode "default"
+    bindsym 4 exec --no-startup-id ~/bin/mon-conf.sh --right --no-laptop; mode "default"
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
