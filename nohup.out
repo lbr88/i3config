@@ -1,0 +1,25 @@
+[Errno 32] Broken pipe
+Traceback (most recent call last):
+  File "/home/lrasmussen/.i3/./pack-workspaces.py", line 114, in <module>
+    i3.main()
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/connection.py", line 514, in main
+    raise loop_exception
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/connection.py", line 497, in main
+    while not self._event_socket_poll():
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/connection.py", line 477, in _event_socket_poll
+    raise e
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/connection.py", line 474, in _event_socket_poll
+    self._pubsub.emit(event_name, event)
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/_private/pubsub.py", line 28, in emit
+    s['handler'](self.conn, data)
+  File "/home/lrasmussen/.i3/./pack-workspaces.py", line 19, in pack_workspaces
+    current_workspaces = [ws for ws in i3.get_workspaces() if ws.name.isdigit()]
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/connection.py", line 272, in get_workspaces
+    data = self._message(MessageType.GET_WORKSPACES, '')
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/connection.py", line 166, in _message
+    raise e
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/connection.py", line 163, in _message
+    return self._ipc_send(self._cmd_socket, message_type, payload)
+  File "/home/lrasmussen/.local/lib/python3.10/site-packages/i3ipc/connection.py", line 145, in _ipc_send
+    sock.sendall(self._pack(message_type, payload))
+BrokenPipeError: [Errno 32] Broken pipe
