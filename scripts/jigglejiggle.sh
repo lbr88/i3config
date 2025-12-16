@@ -32,9 +32,9 @@ if [ -f $pidfile ]; then
   # if it does, read the pid from the file
   pid=$(cat $pidfile)
   # check if the process is still running
-  if ps -p $pid > /dev/null; then
+  if ps -p "$pid" > /dev/null; then
     rm $pidfile
-    kill $pid
+    kill "$pid"
     notify-send -t 1000 -a "jiggle" "jiggle: off"
   else
     _run
