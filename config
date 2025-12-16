@@ -69,7 +69,7 @@ bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -q set 3%+
 bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
 bindsym $mod+F2 exec firefox
 bindsym $mod+Ctrl+c exec ~/.local/bin/clipboardgpt --type reply
-bindsym $mod+c exec ~/.local/bin/clipboardgpt --type grammar
+bindsym $mod+c exec ~/.local/bin/clipboardgpt
 bindsym $ctrlmod+$altmod+Tab exec ~/.local/bin/clipboardgpt --type grammar
 bindsym $shiftmod+$ctrlmod+$altmod+Tab exec ~/.local/bin/clipboardgpt --type reply
 #bindsym $mod+c exec /home/lrasmussen/git/private/clipboardgpt/rungpt.sh
