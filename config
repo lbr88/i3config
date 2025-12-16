@@ -110,15 +110,15 @@ set $mode_monitors Monitor Mode: (l)eft-1440p, (r)ight-1440p, (n)o-laptop-left-1
 bindsym $mod+F6 mode "$mode_monitors"
 
 mode "$mode_monitors" {
-    bindsym l exec --no-startup-id ~/bin/mon-conf.sh --left --limit-resolution; mode "default"
-    bindsym r exec --no-startup-id ~/bin/mon-conf.sh --right --limit-resolution; mode "default"
-    bindsym m exec --no-startup-id ~/bin/mon-conf.sh --right --no-laptop --limit-resolution; mode "default"
-    bindsym n exec --no-startup-id ~/bin/mon-conf.sh --left --no-laptop --limit-resolution; mode "default"
-    bindsym u exec --no-startup-id ~/bin/mon-conf.sh --undock; mode "default"
-    bindsym 1 exec --no-startup-id ~/bin/mon-conf.sh --left; mode "default"
-    bindsym 2 exec --no-startup-id ~/bin/mon-conf.sh --right; mode "default"
-    bindsym 3 exec --no-startup-id ~/bin/mon-conf.sh --left --no-laptop; mode "default"
-    bindsym 4 exec --no-startup-id ~/bin/mon-conf.sh --right --no-laptop; mode "default"
+    bindsym l exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --left --limit-resolution; mode "default"
+    bindsym r exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --right --limit-resolution; mode "default"
+    bindsym m exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --right --no-laptop --limit-resolution; mode "default"
+    bindsym n exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --left --no-laptop --limit-resolution; mode "default"
+    bindsym u exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --undock; mode "default"
+    bindsym 1 exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --left; mode "default"
+    bindsym 2 exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --right; mode "default"
+    bindsym 3 exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --left --no-laptop; mode "default"
+    bindsym 4 exec --no-startup-id ~/.config/i3/scripts/mon-conf.sh --right --no-laptop; mode "default"
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -305,14 +305,14 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 bindsym $mod+0 mode "$mode_system"
 set $mode_system (j)iggle, (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
-    bindsym j exec --no-startup-id jigglejiggle.sh, mode "default"
-    bindsym l exec --no-startup-id i3exit lock, mode "default"
-    bindsym s exec --no-startup-id i3-lockand suspend, mode "default"
-    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
-    bindsym e exec --no-startup-id i3exit logout, mode "default"
-    bindsym h exec --no-startup-id i3-lockand hibernate, mode "default"
-    bindsym r exec --no-startup-id i3exit reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+    bindsym j exec --no-startup-id ~/.config/i3/scripts/jigglejiggle.sh, mode "default"
+    bindsym l exec --no-startup-id ~/.config/i3/scripts/i3exit lock, mode "default"
+    bindsym s exec --no-startup-id ~/.config/i3/scripts/i3-lockand suspend, mode "default"
+    bindsym u exec --no-startup-id ~/.config/i3/scripts/i3exit switch_user, mode "default"
+    bindsym e exec --no-startup-id ~/.config/i3/scripts/i3exit logout, mode "default"
+    bindsym h exec --no-startup-id ~/.config/i3/scripts/i3-lockand hibernate, mode "default"
+    bindsym r exec --no-startup-id ~/.config/i3/scripts/i3exit reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id ~/.config/i3/scripts/i3exit shutdown, mode "default"
 
     # exit system mode: "Enter" or "Escape"
     bindsym Return mode "default"
@@ -344,7 +344,7 @@ mode "resize" {
 }
 
 # Lock screen
-bindsym $mod+9 exec --no-startup-id blurlock
+#bindsym $mod+9 exec --no-startup-id ~/.config/i3/scripts/blurlock
 bindsym $mod+Shift+s exec --no-startup-id flameshot gui
 
 
@@ -376,7 +376,7 @@ bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 # exec_always --no-startup-id sbxkb
 #exec --no-startup-id start_conky_maia
 # exec --no-startup-id start_conky_green
-exec --no-startup-id xautolock -corners "--++" -time 3 -locker 'i3exit lock'
+exec --no-startup-id xautolock -corners "--++" -time 3 -locker '~/.config/i3/scripts/i3exit lock'
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 exec --no-startup-id dock --daemon

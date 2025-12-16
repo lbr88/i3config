@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# Helper script to set the lock screen logo from a URL or local file
+# Usage: ./set-lock-logo <url_or_file>
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <url_or_file>"
+    echo "Sets the lock screen logo from a local file or downloads it from a URL."
+    exit 1
+fi
+
+INPUT="$1"
+CONFIG_DIR="$HOME/.config/i3"
+PNG_FILE="$CONFIG_DIR/lock-logo.png"
+SVG_FILE="$CONFIG_DIR/lock-logo.svg"
+TEMP_FILE=$(mktemp)
+
+if [ -f "$INPUT" ]; then
+    echo "Using local file: $INPUT"
+    cp "$INPUT" "$TEMP_FILE"
+else
+    echo "Downloading from $INPUT..."
+    
+    # Try to download with curl using extensive browser mimicry
+    if ! curl -L \
+        -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0" \
+        -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" \
+        -H "Accept-Language: en-US,en;q=0.5" \
+        -H "Referer: https://www.google.com/" \
+        -H "Connection: keep-alive" \
+        -H "Upgrade-Insecure-Requests: 1" \
+        -H "Sec-Fetch-Dest: document" \
+        -H "Sec-Fetch-Mode: navigate" \
+        -H "Sec-Fetch-Site: cross-site" \
+        -H "Pragma: no-cache" \
+        -H "Cache-Control: no-cache" \
+        -o "$TEMP_FILE" "$INPUT"; then
+        
+        echo "curl failed. Trying wget..."
+        if ! wget --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0" -O "$TEMP_FILE" "$INPUT"; then
+            echo "Error: Failed to download file with both curl and wget."
+            rm "$TEMP_FILE"
+            exit 1
+        fi
+    fi
+
+    # Check if the file is actually an HTML error page (common with 403/404)
+    if grep -qEi "<html|<!DOCTYPE html" "$TEMP_FILE"; then
+        echo "Error: The downloaded file appears to be an HTML page (likely 403 Forbidden or 404 Not Found)."
+        echo "Try downloading the image manually and saving it to $CONFIG_DIR/lock-logo.png"
+        rm "$TEMP_FILE"
+        exit 1
+    fi
+fi
+
+# Detect file type
+MIME_TYPE=$(file --mime-type -b "$TEMP_FILE")
+echo "Detected MIME type: $MIME_TYPE"
+
+if [[ "$MIME_TYPE" == "image/svg+xml" ]]; then
+    echo "Setting as SVG logo..."
+    mv "$TEMP_FILE" "$SVG_FILE"
+    # Remove PNG if it exists so blurlock picks up the SVG
+    [ -f "$PNG_FILE" ] && rm "$PNG_FILE" && echo "Removed existing PNG logo."
+    echo "Success! Logo set to $SVG_FILE"
+
+elif [[ "$MIME_TYPE" == "image/png" ]]; then
+    echo "Setting as PNG logo..."
+    mv "$TEMP_FILE" "$PNG_FILE"
+    # Remove SVG if it exists
+    [ -f "$SVG_FILE" ] && rm "$SVG_FILE" && echo "Removed existing SVG logo."
+    echo "Success! Logo set to $PNG_FILE"
+
+else
+    echo "Image is not PNG or SVG. Converting to PNG..."
+    if command -v convert &> /dev/null; then
+        convert "$TEMP_FILE" "$PNG_FILE"
+        if [ $? -eq 0 ]; then
+            # Remove SVG if it exists
+            [ -f "$SVG_FILE" ] && rm "$SVG_FILE" && echo "Removed existing SVG logo."
+            echo "Success! Converted and set logo to $PNG_FILE"
+        else
+            echo "Error: Failed to convert image."
+            exit 1
+        fi
+    else
+        echo "Error: 'convert' (ImageMagick) not found. Cannot convert this image type."
+        exit 1
+    fi
+fi
+
+rm -f "$TEMP_FILE"

@@ -47,6 +47,12 @@ PACKAGES=(
     "pcmanfm"
     "python3-pip"
     "jq"
+    "zenity"
+    "xdotool"
+    "imagemagick"
+    "i3lock"
+    "librsvg2-bin"
+    "curl"
 )
 
 # Add distro-specific package names
@@ -113,13 +119,8 @@ MISSING_SCRIPTS=()
 
 # List of custom scripts/paths to check
 CUSTOM_PATHS=(
-    "$HOME/bin/mon-conf.sh"
     "$HOME/git/private/clipboardgpt/replygpt.sh"
     "$HOME/git/private/clipboardgpt/grammargpt.sh"
-    "jigglejiggle.sh"
-    "i3exit"
-    "i3-lockand"
-    "blurlock"
     "i3-layout-manager"
 )
 
@@ -148,5 +149,6 @@ fi
 
 # Make local scripts executable
 chmod +x move-window-to-new-workspace.sh new-workspace.sh pack-workspaces.py
+chmod +x scripts/*
 
 echo "Installation and check complete."

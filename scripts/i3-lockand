@@ -1,0 +1,3 @@
+#!/bin/bash
+i3exit lock &
+i3exit $1

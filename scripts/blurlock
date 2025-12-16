@@ -1,0 +1,85 @@
+#!/bin/bash
+
+# Pixelation amount. 
+# Lower percentage = bigger blocks (more pixelated/lossy).
+# 2% is very blocky.
+SCALE_DOWN=2%
+SCALE_UP=5000%
+LOGO_PNG="$HOME/.config/i3/lock-logo.png"
+LOGO_SVG="$HOME/.config/i3/lock-logo.svg"
+LOGO=""
+
+if [ -f "$LOGO_PNG" ]; then
+    LOGO="$LOGO_PNG"
+elif [ -f "$LOGO_SVG" ]; then
+    LOGO="$LOGO_SVG"
+fi
+
+TMP_BG="/tmp/screen_locked.png"
+TMP_LOGO="/tmp/lock_logo_resized.png"
+
+# 1. Take screenshot and pixelate
+# Force TrueColor type to prevent grayscale optimization
+import -silent -window root png:- | \
+    convert png:- -type TrueColor -scale $SCALE_DOWN -scale $SCALE_UP "$TMP_BG"
+
+# 2. If logo exists, composite it onto each screen
+if [ -n "$LOGO" ]; then
+    # Determine if we should use rsvg-convert for SVG
+    IS_SVG=false
+    if [[ "$LOGO" == *.svg ]]; then
+        IS_SVG=true
+    fi
+
+    if [ "$IS_SVG" = true ] && command -v rsvg-convert &> /dev/null; then
+        # Use rsvg-convert for better SVG rendering (preserves colors better)
+        rsvg-convert -w 200 -h 200 --keep-aspect-ratio -f png -o "$TMP_LOGO" "$LOGO"
+    else
+        # Resize logo to a reasonable size (e.g., 200px wide/high)
+        # -background none ensures transparency for SVGs
+        # Force TrueColorAlpha (RGB + Transparency)
+        convert -background none "$LOGO" -resize 200x200 -type TrueColorAlpha "$TMP_LOGO"
+    fi
+
+    # Get screen geometries: WxH+X+Y
+    # Uses grep to extract geometry strings like 1920x1080+0+0
+    SCREENS=$(xrandr | grep " connected" | grep -oE '[0-9]+x[0-9]+\+[0-9]+\+[0-9]+')
+    
+    # Get resized logo dimensions
+    LOGO_W=$(identify -format "%w" "$TMP_LOGO")
+    LOGO_H=$(identify -format "%h" "$TMP_LOGO")
+    
+    # Build the convert command to composite the logo onto each screen
+    # Ensure base image is treated as TrueColor
+    CMD="convert \"$TMP_BG\" -type TrueColor"
+    
+    for SCREEN in $SCREENS; do
+        # Parse geometry
+        W=$(echo $SCREEN | cut -d'x' -f1)
+        H=$(echo $SCREEN | cut -d'x' -f2 | cut -d'+' -f1)
+        X=$(echo $SCREEN | cut -d'+' -f2)
+        Y=$(echo $SCREEN | cut -d'+' -f3)
+        
+        # Calculate position to center the logo on this screen
+        # PosX = ScreenX + (ScreenWidth - LogoWidth) / 2
+        POS_X=$((X + (W - LOGO_W) / 2))
+        POS_Y=$((Y + (H - LOGO_H) / 2))
+        
+        CMD="$CMD \"$TMP_LOGO\" -geometry +${POS_X}+${POS_Y} -composite"
+    done
+    
+    CMD="$CMD \"$TMP_BG\""
+    
+    # Execute the composition
+    eval $CMD
+
+    # Cleanup resized logo
+    rm "$TMP_LOGO"
+fi
+
+# 3. Lock the screen with the final image
+i3lock -i "$TMP_BG"
+
+# Cleanup
+rm "$TMP_BG"
+exit 0
