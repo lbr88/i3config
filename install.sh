@@ -121,8 +121,7 @@ MISSING_SCRIPTS=()
 
 # List of custom scripts/paths to check
 CUSTOM_PATHS=(
-    "replygpt"
-    "grammargpt"
+    "clipboardgpt"
     "i3-layout-manager"
 )
 
