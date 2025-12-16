@@ -74,8 +74,7 @@ elif [[ "$MIME_TYPE" == "image/png" ]]; then
 else
     echo "Image is not PNG or SVG. Converting to PNG..."
     if command -v convert &> /dev/null; then
-        convert "$TEMP_FILE" "$PNG_FILE"
-        if [ $? -eq 0 ]; then
+        if convert "$TEMP_FILE" "$PNG_FILE"; then
             # Remove SVG if it exists
             [ -f "$SVG_FILE" ] && rm "$SVG_FILE" && echo "Removed existing SVG logo."
             echo "Success! Converted and set logo to $PNG_FILE"
