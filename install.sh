@@ -121,8 +121,8 @@ MISSING_SCRIPTS=()
 
 # List of custom scripts/paths to check
 CUSTOM_PATHS=(
-    "$HOME/git/private/clipboardgpt/replygpt.sh"
-    "$HOME/git/private/clipboardgpt/grammargpt.sh"
+    "replygpt"
+    "grammargpt"
     "i3-layout-manager"
 )
 

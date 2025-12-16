@@ -68,10 +68,10 @@ bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -q set 3%+
 # Start Applications
 bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
 bindsym $mod+F2 exec firefox
-bindsym $mod+Ctrl+c exec /home/lrasmussen/git/private/clipboardgpt/replygpt.sh
-bindsym $mod+c exec /home/lrasmussen/git/private/clipboardgpt/grammargpt.sh
-bindsym $ctrlmod+$altmod+Tab exec /home/lrasmussen/git/private/clipboardgpt/grammargpt.sh
-bindsym $shiftmod+$ctrlmod+$altmod+Tab exec /home/lrasmussen/git/private/clipboardgpt/replygpt.sh
+bindsym $mod+Ctrl+c exec replygpt
+bindsym $mod+c exec grammargpt
+bindsym $ctrlmod+$altmod+Tab exec grammargpt
+bindsym $shiftmod+$ctrlmod+$altmod+Tab exec replygpt
 #bindsym $mod+c exec /home/lrasmussen/git/private/clipboardgpt/rungpt.sh
 bindsym $mod+BackSpace exec firefox
 bindsym $mod+$shiftmod+BackSpace exec chromium-browser --new-window "chrome://apps"
