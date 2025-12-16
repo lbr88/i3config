@@ -217,9 +217,9 @@ bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 #switch to new empty workspace
-bindsym $mod+n exec --no-startup-id .i3/new-workspace.sh
+bindsym $mod+n exec --no-startup-id ~/.config/i3/new-workspace.sh
 #move windows to new workspace
-bindsym $mod+Shift+n exec --no-startup-id .i3/move-window-to-new-workspace.sh
+bindsym $mod+Shift+n exec --no-startup-id ~/.config/i3/move-window-to-new-workspace.sh
 
 # Move focused container to workspace
 bindsym $mod+Ctrl+1 move container to workspace $ws1
@@ -361,7 +361,7 @@ exec --no-startup-id ~/.fehbg
 exec --no-startup-id flameshot
 exec --no-startup-id seafile-applet
 exec --no-startup-id env QT_QPA_PLATFORMTHEME=qt5ct QT_STYLE_OVERRIDE=kvantum keepassxc
-exec --no-startup-id ~/.i3/pack-workspaces.py
+exec --no-startup-id ~/.config/i3/pack-workspaces.py
 exec_always --no-startup-id numlockx on
 #exec --no-startup-id safeeyes
 exec --no-startup-id redshift-gtk -l 55.60:11.58
