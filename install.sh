@@ -148,7 +148,6 @@ else
 fi
 
 # Make local scripts executable
-chmod +x move-window-to-new-workspace.sh new-workspace.sh pack-workspaces.py
 chmod +x scripts/*
 
 echo "Installation and check complete."
