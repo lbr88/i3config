@@ -279,6 +279,7 @@ for_window [title="Picture-in-Picture"] floating enable, sticky enable, border n
 #for_window [class="Microsoft Teams - Preview"] floating enable, border normal, move to scratchpad, scratchpad show
 #for_window [class="Microsoft Teams - Preview"] floating enable
 for_window [class="KeePassXC"] floating enable, border normal, move to scratchpad, scratchpad show
+for_window [class="Bitwarden"] floating enable, border normal, move to scratchpad, scratchpad show
 for_window [class="AWS VPN Client"] floating enable, border normal, move to scratchpad, scratchpad show
 #for_window [class="Mattermost"] floating enable, border normal, move to scratchpad, scratchpad show
 for_window [class="Seafile Client"] floating enable, border normal, move to scratchpad, scratchpad show
@@ -359,6 +360,7 @@ exec --no-startup-id ~/.fehbg
 exec --no-startup-id flameshot
 exec --no-startup-id seafile-applet
 exec --no-startup-id env QT_QPA_PLATFORMTHEME=qt5ct QT_STYLE_OVERRIDE=kvantum keepassxc
+exec --no-startup-id bitwarden
 exec --no-startup-id ~/.config/i3/scripts/pack_workspaces.py
 exec_always --no-startup-id numlockx on
 #exec --no-startup-id safeeyes
