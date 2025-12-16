@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
-import i3ipc
+"""
+This script packs workspaces to remove gaps in numbering.
+It listens for workspace events and renames workspaces to be continuous.
+"""
 import time
 
+import i3ipc  # pylint: disable=import-error
+
 SUFFIX = "_"
-# DEBUG = True
+DEBUG = False
 # Instantiate an instance of the i3 connection object
 
 
 def debug_print(*text):
+    """Print debug messages if DEBUG is True."""
     if DEBUG:
         for string in text:
             print(f"DEBUG: {string}")
 
 
 def pack_workspaces(i3, e):
+    """
+    Rename workspaces to be continuous integers.
+    Triggered on workspace events.
+    """
     debug_print(f"triggered {e.change} event for workspace {e.current.name}")
     # To get the current workspaces that are digits
     current_workspaces = [ws for ws in i3.get_workspaces() if ws.name.isdigit()]
@@ -47,20 +57,15 @@ def pack_workspaces(i3, e):
         # Send the rename command to i3 if the workspace is not already named correctly
         if int(workspace.name) != i:
             debug_print(
-                "workspace {} is not named correctly should be {}".format(
-                    workspace.name, i
-                )
+                f"workspace {workspace.name} is not named correctly should be {i}"
             )
-            i3.command(
-                'rename workspace "{}" to "{}{}"'.format(workspace.name, i, SUFFIX)
-            )
-            debug_print(
-                "renaming workspace {} to {}{}".format(workspace.name, i, SUFFIX)
-            )
+            i3.command(f'rename workspace "{workspace.name}" to "{i}{SUFFIX}"')
+            debug_print(f"renaming workspace {workspace.name} to {i}{SUFFIX}")
 
     # get the temp workspaces
     current_workspaces = [ws for ws in i3.get_workspaces() if SUFFIX in ws.name]
-    # Sort the workspaces by numbers, assuming the name of workspace is the new number removing the SUFFIX
+    # Sort the workspaces by numbers, assuming the name of workspace is the new number
+    # removing the SUFFIX
     sorted_workspaces = sorted(
         current_workspaces, key=lambda ws: int(ws.name.split(SUFFIX)[0])
     )
@@ -74,12 +79,8 @@ def pack_workspaces(i3, e):
         # Send the rename command to i3
         if workspace.name != i:
             extracted_name = workspace.name.split(SUFFIX)[0]
-            i3.command(
-                'rename workspace "{}" to "{}"'.format(workspace.name, extracted_name)
-            )
-            debug_print(
-                "renaming workspace {} to {}".format(workspace.name, extracted_name)
-            )
+            i3.command(f'rename workspace "{workspace.name}" to "{extracted_name}"')
+            debug_print(f"renaming workspace {workspace.name} to {extracted_name}")
 
 
 if __name__ == "__main__":
@@ -110,16 +111,16 @@ if __name__ == "__main__":
     DEBUG = args.debug or args.verbose
     SUFFIX = args.suffix if args.suffix != "" else SUFFIX
     # print config info if debug
-    debug_print("SUFFIX: {}".format(SUFFIX))
+    debug_print(f"SUFFIX: {SUFFIX}")
 
     # create the connection object
-    i3 = i3ipc.Connection()
+    connection = i3ipc.Connection()
 
     # listen for init events (when new workspaces are created)
-    i3.on("workspace::init", pack_workspaces)
+    connection.on("workspace::init", pack_workspaces)
 
     # listen for empty events (when a workspace is empty or closed)
-    i3.on("workspace::empty", pack_workspaces)
+    connection.on("workspace::empty", pack_workspaces)
 
     # run listener in a loop
     while True:
@@ -127,7 +128,7 @@ if __name__ == "__main__":
         if not DEBUG:
             time.sleep(5)
         debug_print("Listening for events...")
-        i3.main()
+        connection.main()
         time.sleep(0.5)
         if DEBUG:
             break

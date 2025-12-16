@@ -361,7 +361,7 @@ exec --no-startup-id ~/.fehbg
 exec --no-startup-id flameshot
 exec --no-startup-id seafile-applet
 exec --no-startup-id env QT_QPA_PLATFORMTHEME=qt5ct QT_STYLE_OVERRIDE=kvantum keepassxc
-exec --no-startup-id ~/.config/i3/scripts/pack-workspaces.py
+exec --no-startup-id ~/.config/i3/scripts/pack_workspaces.py
 exec_always --no-startup-id numlockx on
 #exec --no-startup-id safeeyes
 exec --no-startup-id redshift-gtk -l 55.60:11.58
