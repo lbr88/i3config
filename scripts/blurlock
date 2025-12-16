@@ -55,10 +55,10 @@ if [ -n "$LOGO" ]; then
     
     for SCREEN in $SCREENS; do
         # Parse geometry
-        W=$(echo $SCREEN | cut -d'x' -f1)
-        H=$(echo $SCREEN | cut -d'x' -f2 | cut -d'+' -f1)
-        X=$(echo $SCREEN | cut -d'+' -f2)
-        Y=$(echo $SCREEN | cut -d'+' -f3)
+        W=$(echo "$SCREEN" | cut -d'x' -f1)
+        H=$(echo "$SCREEN" | cut -d'x' -f2 | cut -d'+' -f1)
+        X=$(echo "$SCREEN" | cut -d'+' -f2)
+        Y=$(echo "$SCREEN" | cut -d'+' -f3)
         
         # Calculate position to center the logo on this screen
         # PosX = ScreenX + (ScreenWidth - LogoWidth) / 2
@@ -71,7 +71,7 @@ if [ -n "$LOGO" ]; then
     CMD="$CMD \"$TMP_BG\""
     
     # Execute the composition
-    eval $CMD
+    eval "$CMD"
 
     # Cleanup resized logo
     rm "$TMP_LOGO"
