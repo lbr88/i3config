@@ -162,7 +162,7 @@ else
 fi
 
 # Filter out the primary monitor to get the additional monitors
-additional_monitors=($(echo "$connected_monitors" | grep -v "^$primary_display$"))
+mapfile -t additional_monitors < <(echo "$connected_monitors" | grep -v "^$primary_display$")
 
 if [[ ${#additional_monitors[@]} -eq 0 ]]; then
     echo "No additional monitors detected. Exiting."
@@ -189,11 +189,9 @@ elif [[ ${#high_res_monitors[@]} -gt 0 ]]; then
     monitor_list=$(printf '%s, ' "${high_res_monitors[@]}")
     monitor_list=${monitor_list%, }  # Remove trailing comma and space
     
-    limit_response=$(zenity --question --title="High Resolution Detected" \
+    if zenity --question --title="High Resolution Detected" \
         --text="The following monitor(s) support resolutions higher than 1440p:\n\n$monitor_list\n\nDo you want to limit them to 1440p maximum?" \
-        --ok-label="Yes (Limit to 1440p)" --cancel-label="No (Use full resolution)")
-    
-    if [[ $? -eq 0 ]]; then
+        --ok-label="Yes (Limit to 1440p)" --cancel-label="No (Use full resolution)"; then
         limit_resolution=true
         echo "Resolution will be limited to 1440p maximum."
     else
@@ -217,9 +215,9 @@ for monitor in "${additional_monitors[@]}"; do
     echo "Placing $monitor $current_position"
     monitor_resolution=$(get_best_resolution "$monitor" "$limit_resolution")
     if [[ -n "$monitor_resolution" ]]; then
-        xrandr --output "$monitor" --mode "$monitor_resolution" $current_position
+        xrandr --output "$monitor" --mode "$monitor_resolution" "$current_position"
     else
-        xrandr --output "$monitor" --auto $current_position
+        xrandr --output "$monitor" --auto "$current_position"
     fi
     current_position="--${mode}-of $monitor"
 done
@@ -228,11 +226,9 @@ echo "Monitors have been arranged in the following order:"
 echo -e "$primary_display -> ${additional_monitors[*]} (${mode})"
 
 # Handle confirmation and swapping logic
-response=$(zenity --question --title="Monitor Validation" \
+if ! zenity --question --title="Monitor Validation" \
     --text="Are the monitors shown in the correct order?\n\nOrder: $primary_display -> ${additional_monitors[*]}\n\nChoose Yes to confirm or No to rearrange." \
-    --ok-label="Yes (Keep)" --cancel-label="No (Rearrange)")
-
-if [[ $? -ne 0 ]]; then
+    --ok-label="Yes (Keep)" --cancel-label="No (Rearrange)"; then
     # Only consider external monitors for reordering logic
     external_monitors=("${additional_monitors[@]}")
     if [[ ${#external_monitors[@]} -eq 2 ]]; then
@@ -246,16 +242,16 @@ if [[ $? -ne 0 ]]; then
         
         monitor1_resolution=$(get_best_resolution "${external_monitors[1]}" "$limit_resolution")
         if [[ -n "$monitor1_resolution" ]]; then
-            xrandr --output "${external_monitors[1]}" --mode "$monitor1_resolution" --${mode}-of "$primary_display"
+            xrandr --output "${external_monitors[1]}" --mode "$monitor1_resolution" --"${mode}"-of "$primary_display"
         else
-            xrandr --output "${external_monitors[1]}" --auto --${mode}-of "$primary_display"
+            xrandr --output "${external_monitors[1]}" --auto --"${mode}"-of "$primary_display"
         fi
         
         monitor0_resolution=$(get_best_resolution "${external_monitors[0]}" "$limit_resolution")
         if [[ -n "$monitor0_resolution" ]]; then
-            xrandr --output "${external_monitors[0]}" --mode "$monitor0_resolution" --${mode}-of "${external_monitors[1]}"
+            xrandr --output "${external_monitors[0]}" --mode "$monitor0_resolution" --"${mode}"-of "${external_monitors[1]}"
         else
-            xrandr --output "${external_monitors[0]}" --auto --${mode}-of "${external_monitors[1]}"
+            xrandr --output "${external_monitors[0]}" --auto --"${mode}"-of "${external_monitors[1]}"
         fi
     else
         echo "Let's rearrange the monitors."
@@ -269,11 +265,11 @@ if [[ $? -ne 0 ]]; then
             exit 1
         fi
 
-        new_order=($input_order)
+        read -r -a new_order <<< "$input_order"
 
         # Validate if all external monitors are mentioned
         for monitor in "${external_monitors[@]}"; do
-            if [[ ! " ${new_order[*]} " =~ " $monitor " ]]; then
+            if [[ ! " ${new_order[*]} " == *" $monitor "* ]]; then
                 zenity --error --text="Error: Monitor $monitor is missing in the new order. Please try again."
                 exit 1
             fi
@@ -300,11 +296,9 @@ xrandr --output "${additional_monitors[0]}" --primary
 
 # Ask if user wants to disable laptop display (unless --no-laptop was already specified)
 if [[ "$disable_laptop" != "true" ]]; then
-    laptop_response=$(zenity --question --title="Laptop Display" \
+    if zenity --question --title="Laptop Display" \
         --text="Do you want to disable the laptop display (eDP-1)?" \
-        --ok-label="Yes (Disable)" --cancel-label="No (Keep)")
-    
-    if [[ $? -eq 0 ]]; then
+        --ok-label="Yes (Disable)" --cancel-label="No (Keep)"; then
         disable_laptop=true
     fi
 fi
