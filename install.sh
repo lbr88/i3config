@@ -53,6 +53,8 @@ PACKAGES=(
     "i3lock"
     "librsvg2-bin"
     "curl"
+    "xclip"
+    "xsel"
 )
 
 # Add distro-specific package names
