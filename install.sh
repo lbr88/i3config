@@ -80,6 +80,11 @@ elif [ "$PM" == "apt" ]; then
         "py3status"
         "pipx"
         "python3-i3ipc"
+        "vim"
+        "neovim"
+        "x11-xserver-utils"
+        "indent"
+        "libanyevent-i3-perl"
     )
     # Adjusting some names for apt
     PACKAGES=("${PACKAGES[@]/libnotify-bin/libnotify-bin}")
@@ -112,8 +117,29 @@ else
     echo "pipx not found. Skipping i3-resurrect installation."
 fi
 
-# Note: i3ipc is installed via system package (python3-i3ipc or python-i3ipc) 
+# Note: i3ipc is installed via system package (python3-i3ipc or python-i3ipc)
 # to ensure it is available for scripts running with the system python.
+
+# Install i3-layout-manager
+echo "Installing i3-layout-manager..."
+I3LM_REPO="https://github.com/klaxalk/i3-layout-manager"
+I3LM_DIR="/tmp/i3-layout-manager"
+I3LM_INSTALL_DIR="$HOME/.local/bin"
+
+if [ ! -d "$I3LM_INSTALL_DIR" ]; then
+    mkdir -p "$I3LM_INSTALL_DIR"
+fi
+
+if [ -d "$I3LM_DIR" ]; then
+    rm -rf "$I3LM_DIR"
+fi
+
+git clone "$I3LM_REPO" "$I3LM_DIR"
+cp "$I3LM_DIR/layout_manager.sh" "$I3LM_INSTALL_DIR/i3-layout-manager"
+chmod +x "$I3LM_INSTALL_DIR/i3-layout-manager"
+rm -rf "$I3LM_DIR"
+
+echo "i3-layout-manager installed to $I3LM_INSTALL_DIR/i3-layout-manager"
 
 # Check for custom scripts/binaries referenced in config
 echo "Checking for custom scripts referenced in config..."

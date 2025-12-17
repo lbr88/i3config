@@ -131,7 +131,7 @@ mouse_warping none
 #bindsym $mod+semicolon focus right
 
 #layout manager
-bindsym $mod+l exec i3-layout-manager
+bindsym $mod+l exec --no-startup-id ~/.local/bin/i3-layout-manager
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
